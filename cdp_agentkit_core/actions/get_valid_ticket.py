@@ -53,6 +53,8 @@ def get_valid_ticket(wallet: Wallet, bsky_handle: str) -> str:
         return f"Error checking ticket: {e!s}"
 
 class GetValidTicketAction(CdpAction):
-    def execute(self):
-        # Implement your ticket validation logic here
-        pass
+    """Action to check for a valid ticket ID for a Bluesky handle."""
+    name: str = "get_valid_ticket"
+    description: str = "Check if a Bluesky handle has a valid ticket ID in the ticket system"
+    args_schema: type[BaseModel] | None = GetValidTicketInput
+    func: Callable[..., str] = get_valid_ticket
