@@ -39,19 +39,18 @@ l2_resolver_abi = [
 
 ticket_abi = [
     {
-        "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-        "name": "tickets",
-        "outputs": [
-            {"internalType": "address", "name": "owner", "type": "address"},
+        "inputs": [
             {"internalType": "uint256", "name": "ticketId", "type": "uint256"},
-            {"internalType": "uint256", "name": "amount", "type": "uint256"},
-            {"internalType": "enum TicketSystem.TicketState", "name": "state", "type": "uint8"},
             {"internalType": "string", "name": "bskyHandle", "type": "string"}
+        ],
+        "name": "verifyTicket",
+        "outputs": [
+            {"internalType": "bool", "name": "isValid", "type": "bool"},
+            {"internalType": "enum TicketSystem.TicketState", "name": "state", "type": "uint8"}
         ],
         "stateMutability": "view",
         "type": "function"
     }
-    # Note: Only including the relevant ABI entry for the tickets function
 ]
 
 
@@ -62,7 +61,7 @@ class ReadTicketInput(BaseModel):
         description="The ID of the ticket to read"
     )
 
-def read_ticket(wallet: Wallet, ticket_id: str) -> str:
+def read_ticket(wallet: Wallet, ticket_id: int, bsky_handle: str) -> str:
     """Read a ticket's status and Bluesky handle.
 
     Args:
@@ -72,23 +71,26 @@ def read_ticket(wallet: Wallet, ticket_id: str) -> str:
     Returns:
         str: Ticket information or error message
     """
-    try:
-        # Call the tickets mapping function
-        result = wallet.invoke_contract(
+    try:        
+        # Then verify the ticket
+        verify_result = wallet.invoke_contract(
             contract_address=TICKET_SYSTEM_ADDRESS_TESTNET,
-            method="tickets",
-            args=[ticket_id],
-            abi=ticket_abi,  # Updated to use ticket_abi
+            method="verifyTicket",
+            args=[int(ticket_id), bsky_handle],
+            abi=ticket_abi,
         )
-
-        # Parse the result
-        owner, ticket_id, amount, state, bsky_handle = result
+        
+        is_valid, verified_state = verify_result
         
         # Convert state to string
         state_mapping = {0: "NonExistent", 1: "Funded", 2: "Completed"}
         state_str = state_mapping.get(state, "Unknown")
-
-        return f"Ticket {ticket_id}:\nOwner: {owner}\nState: {state_str}\nBluesky Handle: {bsky_handle}\nAmount: {amount} wei"
+        
+        validity_str = "Valid" if is_valid else "Invalid"
+        
+        return (f"Ticket {ticket_id}:\n"
+                f"Bluesky Handle: {bsky_handle}\n"
+                f"Verification: {validity_str}")
     except Exception as e:
         return f"Error reading ticket: {e!s}"
 

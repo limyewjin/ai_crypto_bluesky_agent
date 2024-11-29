@@ -11,7 +11,8 @@ from cdp_agentkit_core.actions.transfer import TransferAction
 from cdp_agentkit_core.actions.wow.buy_token import WowBuyTokenAction
 from cdp_agentkit_core.actions.wow.create_token import WowCreateTokenAction
 from cdp_agentkit_core.actions.wow.sell_token import WowSellTokenAction
-from cdp_agentkit_core.actions.read_ticket import ReadTicketAction
+from cdp_agentkit_core.actions.withdraw_ticket import WithdrawTicketAction
+from cdp_agentkit_core.actions.get_valid_ticket import GetValidTicketAction
 
 # WARNING: All new CdpAction subclasses must be imported above, otherwise they will not be discovered
 # by get_all_cdp_actions(). The import ensures the class is registered as a subclass of CdpAction.
@@ -39,6 +40,7 @@ __all__ = [
     "WowCreateTokenAction",
     "WowBuyTokenAction",
     "WowSellTokenAction",
-    "ReadTicketAction",
+    "WithdrawTicketAction",
+    "GetValidTicketAction",
     "CDP_ACTIONS",
 ]

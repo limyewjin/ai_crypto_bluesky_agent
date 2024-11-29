@@ -13,7 +13,7 @@ contract TicketSystem {
     }
     
     address public owner;
-    uint256 public constant TICKET_PRICE = 0.1 ether;
+    uint256 public constant TICKET_PRICE = 0.01 ether;
     
     mapping(uint256 => Ticket) public tickets;
     uint256 private nextTicketId = 1;
@@ -61,13 +61,20 @@ contract TicketSystem {
         emit TicketCompleted(ticketId);
     }
     
-    function verifyTicket(uint256 ticketId, string memory bskyHandle) external view returns (bool isValid, TicketState state) {
-        if (tickets[ticketId].state == TicketState.NonExistent) {
-            return (false, TicketState.NonExistent);
+    function getValidTicketId(string memory bskyHandle) external view returns (uint256) {       
+        // Iterate backwards from most recent to oldest tickets
+        for (uint256 i = nextTicketId - 1; i > 0; i--) {
+            if (tickets[i].state == TicketState.NonExistent) continue;
+            
+            if (keccak256(bytes(tickets[i].bskyHandle)) == keccak256(bytes(bskyHandle))) {
+                if (tickets[i].state == TicketState.Funded) {
+                    return i;  // Found a valid funded ticket
+                }
+                break;  // Found a ticket for this handle but it's completed, no need to check older ones
+            }
         }
         
-        bool handleMatches = keccak256(bytes(tickets[ticketId].bskyHandle)) == keccak256(bytes(bskyHandle));
-        return (handleMatches, tickets[ticketId].state);
+        return 0;  // No valid ticket found
     }
     
     function withdraw() external onlyOwner {
