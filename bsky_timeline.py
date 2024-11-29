@@ -1,3 +1,11 @@
+"""
+A test script for interacting with the Bluesky social network API.
+
+This script demonstrates basic Bluesky API functionality by fetching and displaying
+the authenticated user's home timeline. Posts are displayed in reverse chronological
+order, showing both original posts and reposts with their authors.
+"""
+
 from atproto import Client
 
 from dotenv import load_dotenv

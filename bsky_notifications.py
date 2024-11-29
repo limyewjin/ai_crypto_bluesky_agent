@@ -1,3 +1,10 @@
+"""
+A test script for interacting with the Bluesky social network API.
+
+This script demonstrates basic Bluesky API functionality by fetching and displaying
+the authenticated user's notifications.
+"""
+
 import api
 
 from time import sleep
@@ -33,8 +40,11 @@ def main() -> None:
                   thread_response = api.bluesky_get_post_thread(notification.uri)
                   has_responded = api.bluesky_has_responded(thread_response)
                   print(f'has_responded: {has_responded}')
+                  root = thread_response.thread
+                  while root.parent is not None:
+                      root = root.parent
                   if not has_responded:
-                      api.bluesky_reply_post(notification, "response")
+                      api.bluesky_reply_post(notification, root, "response")
 
         # mark notifications as processed (isRead=True)
         client.app.bsky.notification.update_seen({'seen_at': last_seen_at})
