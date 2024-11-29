@@ -7,6 +7,7 @@ from cdp_agentkit_core.actions import CDP_ACTIONS
 # Configure a file to persist the agent's CDP MPC Wallet Data.
 WALLET_DATA_FILE = "wallet_data.txt"
 
+# test
 def init_agent(network_id='base-sepolia'):
   load_dotenv()
   Cdp.configure(
