@@ -10,7 +10,7 @@ from cdp_agentkit_core.actions import CdpAction
 
 # Constants
 TICKET_SYSTEM_ADDRESS_TESTNET = "0xF0c37a5E8a46a6ED670F239f3be8ad81e0cbeeA5"
-GET_VALID_TICKET_PROMPT = "Check if a Bluesky handle (e.g., 'alice.bsky.social') has a valid ticket ID in the ticket system. This is needed before we will chat with a user."
+GET_VALID_TICKET_PROMPT = "Check how many tickets a Bluesky handle (e.g., 'alice.bsky.social') has in the ticket system. This is needed before we will chat with a user."
 
 # ABIs for smart contracts
 ticket_abi = [
