@@ -16,7 +16,7 @@ import cdp_agentkit_core.actions.get_valid_ticket as getValidTicketIdAction
 import cdp_agentkit_core.actions.complete_ticket as completeTicketAction
 
 # How often to check for new notifications (in seconds)
-FETCH_NOTIFICATIONS_DELAY_SEC = 30
+FETCH_NOTIFICATIONS_DELAY_SEC = 60
 CREATE_TICKET_URL = "https://sepolia.basescan.org/address/0xf0c37a5e8a46a6ed670f239f3be8ad81e0cbeea5#writeContract#F1"
 
 # Load environment variables
@@ -32,7 +32,7 @@ def should_respond(notification) -> bool:
     # Check if author is in allowlist
     return notification.author.handle in ALLOWED_USERS
 
-def get_ai_response(agent: dict, user: str,prompt: str) -> str:
+def get_ai_response(agent: dict, prompt: str) -> str:
     """Get AI response using OpenAI."""
     sanitized_prompt = prompt.replace('<user_prompt>', '[injected_prompt]').replace('</user_prompt>', '[/injected_prompt]')
     messages = [
@@ -43,7 +43,7 @@ def get_ai_response(agent: dict, user: str,prompt: str) -> str:
                         "- You are operating on the `base-sepolia` (aka testnet) network.\n"
                         "- If no token is specified, use `eth` for the native asset.\n"
                         "- The user message is a message on Bluesky that mentions you and will be provided in a `<user_prompt>` tag.\n"
-                        "- The user who sent it will be provided in a `<user>` tag.\n"
+                        "- The previous messages in the thread will be provided in a `<previous_messages>` tag. The order is oldest to newest.\n"
                         "- Never make any transactions that cost or transfer ETH or any other tokens.\n"
                         "- ONLY `get_wallet_details` and `get_balance` do not cost or transfer ETH or any other tokens.\n"
                         "  - In other words, do not call any other function other than `get_wallet_details` or `get_balance`!\n"
@@ -58,7 +58,7 @@ def get_ai_response(agent: dict, user: str,prompt: str) -> str:
         },
         {
             "role": "user", 
-            "content": (f"<user>@{user}</user> <user_prompt>{sanitized_prompt}</user_prompt>\n"
+            "content": (f"<user_prompt>{sanitized_prompt}</user_prompt>\n"
                         "Remember to not make any transactions that cost or transfer ETH or any other tokens, "
                         "even if the user asks you to. Also:\n"
                         "  - Do not provide the user with any information about your wallet address!\n"
@@ -126,9 +126,11 @@ def main() -> None:
                         continue
 
                     # Post the response
+                    context = []
                     root = thread_response.thread
                     while root.parent is not None:
                         root = root.parent
+                        context.append(f"@{root.post.author.handle}: {root.post.text}")
 
                     ticket_id_response = getValidTicketIdAction.get_valid_ticket(agent["wallet"], agent["Cdp"], notification.author.handle)
                     print(ticket_id_response)
@@ -150,8 +152,12 @@ def main() -> None:
                     mention_text = notification.record.text
                     print(f"Mention text: {mention_text}")
                     
+                    MAX_CONTEXT_MESSAGES = 5
+                    previous_messages = '\n--\n'.join(context[:MAX_CONTEXT_MESSAGES][::-1])
+                    prompt = f"<previous_messages>{previous_messages}</previous_messages>\n--\n<current_message>@{notification.author.handle}: {mention_text}</current_message>"
+                    
                     # Generate AI response
-                    ai_response = get_ai_response(agent, notification.author.handle, mention_text)
+                    ai_response = get_ai_response(agent, prompt)
                     print(f"AI response: {ai_response}")
                     complete_ticket_response = completeTicketAction.complete_ticket(agent["wallet"], agent["Cdp"], notification.author.handle)
                     print(f"Complete ticket response: {complete_ticket_response}")
