@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from cdp import Wallet
+from cdp import Wallet, Cdp
 from pydantic import BaseModel, Field
 
 from cdp_agentkit_core.actions import CdpAction
@@ -26,7 +26,7 @@ class DeployNftInput(BaseModel):
     )
 
 
-def deploy_nft(wallet: Wallet, name: str, symbol: str, base_uri: str) -> str:
+def deploy_nft(wallet: Wallet, Cdp: Cdp, name: str, symbol: str, base_uri: str) -> str:
     """Deploy an NFT (ERC-721) token collection onchain from the wallet.
 
     Args:

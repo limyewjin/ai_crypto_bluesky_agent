@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from cdp import Wallet
+from cdp import Wallet, Cdp
 from pydantic import BaseModel, Field
 from web3 import Web3
 from web3.exceptions import ContractLogicError
@@ -36,7 +36,7 @@ class RegisterBasenameInput(BaseModel):
     )
 
 
-def register_basename(wallet: Wallet, basename: str, amount: str = "0.002") -> str:
+def register_basename(wallet: Wallet, Cdp: Cdp, basename: str, amount: str = "0.002") -> str:
     """Register a Basename for the agent.
 
     Args:

@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from cdp import Wallet
+from cdp import Wallet, Cdp
 from pydantic import BaseModel, Field
 
 from cdp_agentkit_core.actions import CdpAction
@@ -18,7 +18,7 @@ class GetBalanceInput(BaseModel):
     )
 
 
-def get_balance(wallet: Wallet, asset_id: str) -> str:
+def get_balance(wallet: Wallet, Cdp: Cdp, asset_id: str) -> str:
     """Get balance for all addresses in the wallet for a given asset.
 
     Args:

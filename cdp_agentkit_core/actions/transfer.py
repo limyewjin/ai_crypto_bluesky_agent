@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from cdp import Wallet
+from cdp import Wallet, Cdp
 from pydantic import BaseModel, Field
 
 from cdp_agentkit_core.actions import CdpAction
@@ -30,7 +30,7 @@ class TransferInput(BaseModel):
 
 
 def transfer(
-    wallet: Wallet, amount: str, asset_id: str, destination: str, gasless: bool = False
+    wallet: Wallet, Cdp: Cdp, amount: str, asset_id: str, destination: str, gasless: bool = False
 ) -> str:
     """Transfer a specified amount of an asset to a destination onchain. USDC Transfers on Base Sepolia and Mainnet can be gasless. Always use the gasless option when available.
 

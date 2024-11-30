@@ -13,11 +13,12 @@ def init_agent(network_id='base-sepolia'):
       api_key_name=os.environ["CDP_API_KEY_NAME"],
       private_key=os.environ["CDP_API_KEY_PRIVATE_KEY"].encode().decode('unicode-escape')
   )
+  values = {}
+  values["Cdp"] = Cdp
   wallet_data_json = None
   if os.path.exists(WALLET_DATA_FILE):
       with open(WALLET_DATA_FILE) as f:
           wallet_data_json = f.read()
-  values = {}
   if wallet_data_json:
     wallet_data = WalletData.from_dict(json.loads(wallet_data_json))
     wallet = Wallet.import_data(wallet_data)
@@ -52,7 +53,7 @@ def init_agent(network_id='base-sepolia'):
   values["tools"] = tools
   return values
 
-def process_tool_calls(wallet, response):
+def process_tool_calls(wallet, Cdp, response):
     tool_calls = response.tool_calls
 
     results = []
@@ -68,7 +69,7 @@ def process_tool_calls(wallet, response):
                     # Validate and call the function
                     validated_args = action.args_schema(**arguments)
                     print(f"Validated args: {validated_args}")
-                    result = action.func(wallet, **validated_args.dict())
+                    result = action.func(wallet, Cdp, **validated_args.dict())
                     results.append({"id": tool_call.id, "result": result})
                 except Exception as e:
                     results.append({"id": tool_call.id, "error": str(e)})

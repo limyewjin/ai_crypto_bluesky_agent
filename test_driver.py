@@ -32,7 +32,7 @@ def get_ai_response(agent: dict, user: str,prompt: str) -> str:
         for choice in response.choices:
             if choice.finish_reason == "tool_calls":
                 messages.append(choice.message)
-                results = cdp_agent.process_tool_calls(agent["wallet"], choice.message)
+                results = cdp_agent.process_tool_calls(agent["wallet"], agent["Cdp"], choice.message)
                 print(results)
                 for result in results:
                     function_call_result_message = {

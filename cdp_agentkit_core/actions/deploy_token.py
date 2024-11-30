@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from cdp import Wallet
+from cdp import Wallet, Cdp
 from pydantic import BaseModel, Field
 
 from cdp_agentkit_core.actions import CdpAction
@@ -20,7 +20,7 @@ class DeployTokenInput(BaseModel):
     )
 
 
-def deploy_token(wallet: Wallet, name: str, symbol: str, total_supply: str) -> str:
+def deploy_token(wallet: Wallet, Cdp: Cdp, name: str, symbol: str, total_supply: str) -> str:
     """Deploy an ERC20 token smart contract.
 
     Args:

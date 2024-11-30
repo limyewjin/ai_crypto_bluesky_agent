@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from cdp import Wallet
+from cdp import Wallet, Cdp
 from pydantic import BaseModel, Field
 
 from cdp_agentkit_core.actions import CdpAction
@@ -22,7 +22,7 @@ class MintNftInput(BaseModel):
     )
 
 
-def mint_nft(wallet: Wallet, contract_address: str, destination: str) -> str:
+def mint_nft(wallet: Wallet, Cdp: Cdp, contract_address: str, destination: str) -> str:
     """Mint an NFT (ERC-721) to a specified destination address onchain via a contract invocation.
 
     Args:

@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from cdp import Wallet
+from cdp import Wallet, Cdp
 from pydantic import BaseModel, Field
 
 from cdp_agentkit_core.actions import CdpAction
@@ -21,7 +21,7 @@ class RequestFaucetFundsInput(BaseModel):
     )
 
 
-def request_faucet_funds(wallet: Wallet, asset_id: str | None = None) -> str:
+def request_faucet_funds(wallet: Wallet, Cdp: Cdp, asset_id: str | None = None) -> str:
     """Request test tokens from the faucet for the default address in the wallet.
 
     Args:

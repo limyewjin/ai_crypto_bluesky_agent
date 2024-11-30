@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from cdp import Wallet
+from cdp import Wallet, Cdp
 from pydantic import BaseModel, Field
 
 from cdp_agentkit_core.actions import CdpAction
@@ -25,7 +25,7 @@ class TradeInput(BaseModel):
     )
 
 
-def trade(wallet: Wallet, amount: str, from_asset_id: str, to_asset_id: str) -> str:
+def trade(wallet: Wallet, Cdp: Cdp, amount: str, from_asset_id: str, to_asset_id: str) -> str:
     """Trade a specified amount of a from asset to a to asset for the wallet. Trades are only supported on Mainnets.
 
     Args:

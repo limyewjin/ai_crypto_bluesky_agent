@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from cdp import Wallet
+from cdp import Wallet, Cdp
 from pydantic import BaseModel
 
 from cdp_agentkit_core.actions import CdpAction
@@ -10,7 +10,7 @@ class GetWalletDetailsInput(BaseModel):
     """Input argument schema for get wallet details action."""
 
 
-def get_wallet_details(wallet: Wallet) -> str:
+def get_wallet_details(wallet: Wallet, Cdp: Cdp) -> str:
     """Get a wallet's details.
 
     Args:

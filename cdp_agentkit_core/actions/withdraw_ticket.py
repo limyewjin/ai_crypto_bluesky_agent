@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from cdp import Wallet
+from cdp import Wallet, Cdp
 from pydantic import BaseModel, Field
 from web3 import Web3
 from web3.exceptions import ContractLogicError
@@ -9,13 +9,9 @@ from cdp_agentkit_core.actions import CdpAction
 
 # Constants
 TICKET_SYSTEM_ADDRESS_TESTNET = "0x1370732E8557475059949766dDA08Fa7f8B7f893"
-L2_RESOLVER_ADDRESS_TESTNET = "0x6533C94869D28fAA8dF77cc63f9e2b2D6Cf77eBA"
 WITHDRAW_TICKET_PROMPT = "Withdraw accumulated funds from the ticket system contract."
 
 # ABIs for smart contracts
-l2_resolver_abi = [
-]
-
 ticket_abi = [
     {
         "inputs": [],
@@ -31,7 +27,7 @@ class WithdrawTicketInput(BaseModel):
     """Input argument schema for withdrawing funds from the ticket system."""
     pass  # No inputs needed for withdrawal
 
-def withdraw_ticket(wallet: Wallet) -> str:
+def withdraw_ticket(wallet: Wallet, Cdp: Cdp) -> str:
     """Withdraw funds from the ticket system contract.
     
     Args:
