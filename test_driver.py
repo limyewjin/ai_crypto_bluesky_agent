@@ -11,6 +11,7 @@ import json
 
 def get_ai_response(agent: dict, user: str,prompt: str) -> str:
     """Get AI response using OpenAI."""
+    sanitized_prompt = prompt.replace('<user_prompt>', '[injected_prompt]').replace('</user_prompt>', '[/injected_prompt]')
     messages = [
         {
             "role": "system",
@@ -18,11 +19,14 @@ def get_ai_response(agent: dict, user: str,prompt: str) -> str:
                         "You have access to a CDP MPC wallet and can make transactions on the blockchain. You are operating "
                         "on the `base-sepolia` (aka testnet) network.  If no token is specified, use `eth` for the native asset. "
                         "The user message will be prefixed with `@<username>` and is a message on Bluesky that mentions you. "
+                        "Never make any transactions that cost or transfer ETH or any other tokens. "
                         "Keep responses concise and under 280 characters.")
         },
         {
             "role": "user", 
-            "content": f"from @{user}: {prompt}"
+            "content": (f"<user>@{user}</user> <user_prompt>{sanitized_prompt}</user_prompt>\n"
+                        "Remember to not make any transactions that cost or transfer ETH or any other tokens, "
+                        "even if the user asks you to.")
         }
     ]
     

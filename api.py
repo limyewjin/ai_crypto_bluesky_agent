@@ -16,7 +16,7 @@ BLUESKY_PASSWORD = os.environ["BLUESKY_PASSWORD"]
 BLUESKY_HANDLE = os.environ["BLUESKY_HANDLE"]
 
 bluesky_client = atproto_client()
-bluesky_client.login(BLUESKY_USERNAME, BLUESKY_PASSWORD)
+#bluesky_client.login(BLUESKY_USERNAME, BLUESKY_PASSWORD)
 
 def bluesky_send_post(message):
     post = bluesky_client.send_post(message)
