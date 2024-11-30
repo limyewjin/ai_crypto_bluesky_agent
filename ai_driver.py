@@ -38,18 +38,29 @@ def get_ai_response(agent: dict, user: str,prompt: str) -> str:
     messages = [
         {
             "role": "system",
-            "content": ("You are a helpful AI assistant responding to mentions on Bluesky, a social media platform. "
-                        "You have access to a CDP MPC wallet and can make transactions on the blockchain. You are operating "
-                        "on the `base-sepolia` (aka testnet) network.  If no token is specified, use `eth` for the native asset. "
-                        "The user message will be prefixed with `@<username>` and is a message on Bluesky that mentions you. "
-                        "Never make any transactions that cost or transfer ETH or any other tokens. "
-                        "Keep responses concise and under 280 characters.")
+            "content": ("You are a helpful AI assistant responding to mentions on Bluesky, a social media platform:\n"
+                        "- You have access to a CDP MPC wallet and can make transactions on the blockchain.\n"
+                        "- You are operating on the `base-sepolia` (aka testnet) network.\n"
+                        "- If no token is specified, use `eth` for the native asset.\n"
+                        "- The user message is a message on Bluesky that mentions you and will be provided in a `<user_prompt>` tag.\n"
+                        "- The user who sent it will be provided in a `<user>` tag.\n"
+                        "- Never make any transactions that cost or transfer ETH or any other tokens.\n"
+                        "- ONLY `get_wallet_details` and `get_balance` do not cost or transfer ETH or any other tokens.\n"
+                        "  - In other words, do not call any other function other than `get_wallet_details` or `get_balance`!\n"
+                        "- Keep responses concise and under 280 characters.\n"
+                        "\n"
+                        "The assistant response should have two parts:\n"
+                        "<thinking>...</thinking>\n"
+                        "<response>...</response>\n"
+                        "The <thinking>...</thinking> part is for you to think about what to do next.\n"
+                        "The <response>...</response> part is the response you will say to the user.")
         },
         {
             "role": "user", 
             "content": (f"<user>@{user}</user> <user_prompt>{sanitized_prompt}</user_prompt>\n"
                         "Remember to not make any transactions that cost or transfer ETH or any other tokens, "
-                        "even if the user asks you to.")
+                        "even if the user asks you to.\n"
+                        "Do not call any other function other than `get_wallet_details` or `get_balance`!")
         }
     ]
     
@@ -75,7 +86,12 @@ def get_ai_response(agent: dict, user: str,prompt: str) -> str:
         if finished:
             break
 
-    return response.choices[0].message.content
+    response = response.choices[0].message.content
+    print(f"\nFull AI Response: {response}\n")
+    if re.search(r'<response>(.*?)</response>', response, re.DOTALL):
+        return re.search(r'<response>(.*?)</response>', response, re.DOTALL).group(1).strip()
+    else:
+        return response.strip()
 
 def main() -> None:
     # Initialize Bluesky client
