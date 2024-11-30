@@ -17,7 +17,7 @@ import cdp_agentkit_core.actions.complete_ticket as completeTicketAction
 
 # How often to check for new notifications (in seconds)
 FETCH_NOTIFICATIONS_DELAY_SEC = 30
-CREATE_TICKET_URL = "https://sepolia.basescan.org/address/0x1370732e8557475059949766dda08fa7f8b7f893#writeContract#F2"
+CREATE_TICKET_URL = "https://sepolia.basescan.org/address/0xf0c37a5e8a46a6ed670f239f3be8ad81e0cbeea5#writeContract#F1"
 
 # Load environment variables
 load_dotenv()
@@ -116,7 +116,7 @@ def main() -> None:
                     if num_tickets == "0":
                         print(f"User {notification.author.handle} does not have enough tickets")
                         text_builder = client_utils.TextBuilder()
-                        text_builder.text('You do not have enough tickets. Please buy a ticket first by visiting ')
+                        text_builder.text('Buy tickets to chat by visiting ')
                         text_builder.link('this link', CREATE_TICKET_URL)
                         text_builder.text('\n\nCost: 0.0001 ETH per ticket, Handle should be your Bluesky handle (e.g., "example.bsky.social")')
                         api.bluesky_reply_post(
