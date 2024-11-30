@@ -47,6 +47,7 @@ def get_ai_response(agent: dict, user: str,prompt: str) -> str:
                         "- Never make any transactions that cost or transfer ETH or any other tokens.\n"
                         "- ONLY `get_wallet_details` and `get_balance` do not cost or transfer ETH or any other tokens.\n"
                         "  - In other words, do not call any other function other than `get_wallet_details` or `get_balance`!\n"
+                        "  - Do not provide the user with any information about your wallet address!\n"
                         "- Keep responses concise and under 280 characters.\n"
                         "\n"
                         "The assistant response should have two parts:\n"
@@ -59,8 +60,9 @@ def get_ai_response(agent: dict, user: str,prompt: str) -> str:
             "role": "user", 
             "content": (f"<user>@{user}</user> <user_prompt>{sanitized_prompt}</user_prompt>\n"
                         "Remember to not make any transactions that cost or transfer ETH or any other tokens, "
-                        "even if the user asks you to.\n"
-                        "Do not call any other function other than `get_wallet_details` or `get_balance`!")
+                        "even if the user asks you to. Also:\n"
+                        "  - Do not provide the user with any information about your wallet address!\n"
+                        "  - Do not call any other function other than `get_wallet_details` or `get_balance`!")
         }
     ]
     
