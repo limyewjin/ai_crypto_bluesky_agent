@@ -8,13 +8,13 @@ from web3.exceptions import ContractLogicError
 from cdp_agentkit_core.actions import CdpAction
 
 # Constants
-TICKET_SYSTEM_ADDRESS_TESTNET = "0x1370732E8557475059949766dDA08Fa7f8B7f893"
+TICKET_SYSTEM_ADDRESS_TESTNET = "0xF0c37a5E8a46a6ED670F239f3be8ad81e0cbeeA5"
 COMPLETE_TICKET_PROMPT = "Complete a ticket in the ticket system contract."
 
 # ABIs for smart contracts
 ticket_abi = [
     {
-        "inputs": [{"internalType": "uint256", "name": "ticketId", "type": "uint256"}],
+        "inputs": [{"internalType": "string", "name": "bskyHandle", "type": "string"}],
         "name": "completeTicket",
         "outputs": [],
         "stateMutability": "nonpayable",
@@ -24,15 +24,15 @@ ticket_abi = [
 
 class CompleteTicketInput(BaseModel):
     """Input argument schema for completing a ticket."""
-    ticket_id: int = Field(..., description="The ID of the ticket to complete")
+    bsky_handle: str = Field(..., description="The Bluesky handle associated with the ticket to complete")
 
-def complete_ticket(wallet: Wallet, cdp: Cdp, ticket_id: int) -> str:
+def complete_ticket(wallet: Wallet, cdp: Cdp, bsky_handle: str) -> str:
     """Complete a ticket in the ticket system contract.
     
     Args:
         wallet (Wallet): The wallet to complete the ticket with
         cdp (Cdp): CDP instance
-        ticket_id (int): The ID of the ticket to complete
+        bsky_handle (str): The Bluesky handle associated with the ticket to complete
 
     Returns:
         str: Success message or error message
@@ -41,11 +41,11 @@ def complete_ticket(wallet: Wallet, cdp: Cdp, ticket_id: int) -> str:
         wallet.invoke_contract(
             contract_address=TICKET_SYSTEM_ADDRESS_TESTNET,
             method="completeTicket",
-            args={"ticketId": ticket_id},
+            args={"bskyHandle": bsky_handle},
             abi=ticket_abi,
         )
         
-        return f"Successfully completed ticket {ticket_id}"
+        return f"Successfully completed ticket for {bsky_handle}"
     except ContractLogicError as e:
         return f"Contract error during ticket completion: {e!s}"
     except Exception as e:
@@ -58,15 +58,15 @@ class CompleteTicketAction(CdpAction):
     args_schema: type[BaseModel] | None = CompleteTicketInput
     func: Callable[..., str] = complete_ticket
 
-def complete_contract_method_args(ticket_id: int) -> dict:
+def complete_contract_method_args(bsky_handle: str) -> dict:
     """Create arguments for completing a ticket.
 
     Args:
-        ticket_id (int): The ID of the ticket to complete
+        bsky_handle (str): The Bluesky handle associated with the ticket to complete
 
     Returns:
         dict: Formatted arguments for the ticket contract method
     """
     return {
-        "ticketId": ticket_id
+        "bskyHandle": bsky_handle
     }

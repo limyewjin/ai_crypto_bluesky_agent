@@ -8,7 +8,7 @@ from web3.exceptions import ContractLogicError
 from cdp_agentkit_core.actions import CdpAction
 
 # Constants
-TICKET_SYSTEM_ADDRESS_TESTNET = "0x1370732E8557475059949766dDA08Fa7f8B7f893"
+TICKET_SYSTEM_ADDRESS_TESTNET = "0xF0c37a5E8a46a6ED670F239f3be8ad81e0cbeeA5"
 WITHDRAW_TICKET_PROMPT = "Withdraw accumulated funds from the ticket system contract."
 
 # ABIs for smart contracts

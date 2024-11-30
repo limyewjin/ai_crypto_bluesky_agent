@@ -111,14 +111,14 @@ def main() -> None:
 
                     ticket_id_response = getValidTicketIdAction.get_valid_ticket(agent["wallet"], agent["Cdp"], notification.author.handle)
                     print(ticket_id_response)
-                    ticket_id = re.search(r'value=\'(.*)\'', ticket_id_response).group(1)
-                    print(f"Ticket ID: {ticket_id}")
-                    if ticket_id == "0":
-                        print(f"User {notification.author.handle} does not have a valid ticket ID")
+                    num_tickets = re.search(r"name='availableTickets', value='(.*)'", ticket_id_response).group(1)
+                    print(f"Number of tickets: {num_tickets}")
+                    if num_tickets == "0":
+                        print(f"User {notification.author.handle} does not have enough tickets")
                         text_builder = client_utils.TextBuilder()
-                        text_builder.text('You do not have a valid ticket. Please buy a ticket first by visiting ')
+                        text_builder.text('You do not have enough tickets. Please buy a ticket first by visiting ')
                         text_builder.link('this link', CREATE_TICKET_URL)
-                        text_builder.text('\n\nCost: 0.01 ETH, Handle should be your Bluesky handle (e.g., "example.bsky.social")')
+                        text_builder.text('\n\nCost: 0.0001 ETH per ticket, Handle should be your Bluesky handle (e.g., "example.bsky.social")')
                         api.bluesky_reply_post(
                             notification,
                             root,
@@ -132,7 +132,7 @@ def main() -> None:
                     # Generate AI response
                     ai_response = get_ai_response(agent, notification.author.handle, mention_text)
                     print(f"AI response: {ai_response}")
-                    complete_ticket_response = completeTicketAction.complete_ticket(agent["wallet"], agent["Cdp"], ticket_id)
+                    complete_ticket_response = completeTicketAction.complete_ticket(agent["wallet"], agent["Cdp"], notification.author.handle)
                     print(f"Complete ticket response: {complete_ticket_response}")
                     api.bluesky_reply_post(notification, root, ai_response)
                     print(f"Posted response to @{notification.author.handle}")
