@@ -111,11 +111,11 @@ def main() -> None:
             
             for notification in response.notifications:
                 if not notification.is_read:
-                    print(f"Processing notification {notification}")
+                    print(f"Processing notification {notification}")                    
+                    if notification.reason != 'mention': continue
+
                     print(f"from @{notification.author.handle}")
                     print(f"text: {notification.record.text}")
-                    
-                    if notification.reason != 'mention': continue
 
                     # Check if we've already responded to this thread
                     thread_response = api.bluesky_get_post_thread(notification.uri)
@@ -130,7 +130,7 @@ def main() -> None:
                     root = thread_response.thread
                     while root.parent is not None:
                         root = root.parent
-                        context.append(f"@{root.post.author.handle}: {root.post.text}")
+                        context.append(f"@{root.post.author.handle}: {root.post.record.text}")
 
                     ticket_id_response = getValidTicketIdAction.get_valid_ticket(agent["wallet"], agent["Cdp"], notification.author.handle)
                     print(ticket_id_response)
