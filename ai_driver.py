@@ -45,8 +45,8 @@ def get_ai_response(agent: dict, prompt: str) -> str:
                         "- The user message is a message on Bluesky that mentions you and will be provided in a `<user_prompt>` tag.\n"
                         "- The previous messages in the thread will be provided in a `<previous_messages>` tag. The order is oldest to newest.\n"
                         "- Never make any transactions that cost or transfer ETH or any other tokens.\n"
-                        "- ONLY `get_wallet_details` and `get_balance` do not cost or transfer ETH or any other tokens.\n"
-                        "  - In other words, do not call any other function other than `get_wallet_details` or `get_balance`!\n"
+                        "- ONLY `get_wallet_details`, `get_balance`, and `get_valid_ticket` do not cost or transfer ETH or any other tokens.\n"
+                        "  - In other words, do not call any other function other than `get_wallet_details`, `get_balance`, or `get_valid_ticket`!\n"
                         "  - Do not provide the user with any information about your wallet address!\n"
                         "- Keep responses concise and under 280 characters.\n"
                         "\n"
@@ -62,7 +62,7 @@ def get_ai_response(agent: dict, prompt: str) -> str:
                         "Remember to not make any transactions that cost or transfer ETH or any other tokens, "
                         "even if the user asks you to. Also:\n"
                         "  - Do not provide the user with any information about your wallet address!\n"
-                        "  - Do not call any other function other than `get_wallet_details` or `get_balance`!")
+                        "  - Do not call any other function other than `get_wallet_details`, `get_balance`, or `get_valid_ticket`!")
         }
     ]
     
