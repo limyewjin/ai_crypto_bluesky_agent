@@ -41,7 +41,6 @@ def get_ai_response(agent: dict, user: str,prompt: str) -> str:
                         "You have access to a CDP MPC wallet and can make transactions on the blockchain. You are operating "
                         "on the `base-sepolia` (aka testnet) network.  If no token is specified, use `eth` for the native asset. "
                         "The user message will be prefixed with `@<username>` and is a message on Bluesky that mentions you. "
-                        "You need to check if the user has a valid ticket ID in the ticket system before you can respond to them. "
                         "Keep responses concise and under 280 characters.")
         },
         {
